@@ -6,9 +6,8 @@ import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -109,7 +108,7 @@ public abstract class JavaPlugin implements Plugin {
      * the configuration file will have no values.
      *
      * @return The configuration.
-     * @deprecated See the new 
+     * @deprecated See the new {@link JavaPlugin#getConfig()}
      */
     @Deprecated
     public Configuration getConfiguration() {
@@ -119,14 +118,14 @@ public abstract class JavaPlugin implements Plugin {
         }
         return config;
     }
-    
+
     public FileConfiguration getConfig() {
         if (newConfig == null) {
             reloadConfig();
         }
         return newConfig;
     }
-    
+
     public void reloadConfig() {
         newConfig = YamlConfiguration.loadConfiguration(configFile);
 
@@ -137,15 +136,56 @@ public abstract class JavaPlugin implements Plugin {
             newConfig.setDefaults(defConfig);
         }
     }
-    
+
     public void saveConfig() {
         try {
-            newConfig.save(configFile);
+            getConfig().save(configFile);
         } catch (IOException ex) {
             Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + configFile, ex);
         }
     }
-    
+
+    public void saveDefaultConfig() {
+        saveResource("config.yml", false);
+    }
+
+    public void saveResource(String resourcePath, boolean replace) {
+        if (resourcePath == null || resourcePath.equals("")) {
+            throw new IllegalArgumentException("ResourcePath cannot be null or empty");
+        }
+
+        resourcePath = resourcePath.replace('\\', '/');
+        InputStream in = getResource(resourcePath);
+        if (in == null) {
+            throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + getFile());
+        }
+
+        File outFile = new File(getDataFolder(), resourcePath);
+        int lastIndex = resourcePath.lastIndexOf('/');
+        File outDir = new File(getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+
+        if (!outDir.exists()) {
+            outDir.mkdirs();
+        }
+
+        try {
+            if (!outFile.exists() || replace) {
+                OutputStream out = new FileOutputStream(outFile);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.close();
+                in.close();
+            } else {
+                Logger.getLogger(JavaPlugin.class.getName()).log(Level.WARNING, "Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, ex);
+        }
+    }
+
     public InputStream getResource(String filename) {
         if (filename == null) {
             throw new IllegalArgumentException("Filename cannot be null");
@@ -204,9 +244,7 @@ public abstract class JavaPlugin implements Plugin {
      * @param file File containing this plugin
      * @param classLoader ClassLoader which holds this plugin
      */
-    protected final void initialize(PluginLoader loader, Server server,
-            PluginDescriptionFile description, File dataFolder, File file,
-            ClassLoader classLoader) {
+    protected final void initialize(PluginLoader loader, Server server, PluginDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
         if (!initialized) {
             this.initialized = true;
             this.loader = loader;
