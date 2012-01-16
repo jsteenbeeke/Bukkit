@@ -12,15 +12,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapView;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 /**
  * Represents a player, connected or not
- *
  */
-public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
+public interface Player extends HumanEntity, CommandSender, OfflinePlayer, PluginMessageRecipient {
     /**
      * Gets the "friendly" name to display of this player. This may include color.
-     *
+     * <p />
      * Note that this name will not be displayed in game, only in chat and places
      * defined by plugins
      *
@@ -30,7 +30,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
 
     /**
      * Sets the "friendly" name to display of this player. This may include color.
-     *
+     * <p />
      * Note that this name will not be displayed in game, only in chat and places
      * defined by plugins
      *
@@ -49,6 +49,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * Sets the name that is shown on the in-game player list.
      * <p>
      * The name cannot be longer than 16 characters, but {@link ChatColor} is supported.
+     * Colors do not count towards the length limitation.
      * <p>
      * If the value is null, the name will be identical to {@link #getName()}.
      * <p>
@@ -151,7 +152,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
 
     /**
      * Loads the players current location, health, inventory, motion, and other information from the username.dat file, in the world/player folder
-     *
+     * <p />
      * Note: This will overwrite the players current inventory, health, motion, etc, with the state from the saved dat file.
      */
     public void loadData();
@@ -218,7 +219,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * Send a chunk change. This fakes a chunk change packet for a user at
      * a certain location. The updated cuboid must be entirely within a single
      * chunk. This will not actually change the world in any way.
-     *
+     * <p />
      * At least one of the dimensions of the cuboid must be even. The size of the
      * data buffer must be 2.5*sx*sy*sz and formatted in accordance with the Packet51
      * format.
@@ -228,7 +229,6 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param sy The y size of the cuboid
      * @param sz The z size of the cuboid
      * @param data The data to be sent
-     *
      * @return true if the chunk change packet was sent
      */
     public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data);
@@ -301,7 +301,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
     /**
      * Sets the current time on the player's client. When relative is true the player's time
      * will be kept synchronized to its world time with the specified offset.
-     *
+     * <p />
      * When using non relative time the player's time will stay fixed at the specified time parameter. It's up to
      * the caller to continue updating the player's time. To restore player time to normal use resetPlayerTime().
      *
@@ -469,4 +469,19 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @return Bed Spawn Location if bed exists, otherwise null.
      */
     public Location getBedSpawnLocation();
+
+    /**
+     * Determines if the Player is allowed to fly via jump key double-tap like in creative mode.
+     *
+     * @return True if the player is allowed to fly.
+     */
+    public boolean getAllowFlight();
+
+    /**
+     * Sets if the Player is allowed to fly via jump key double-tap like in creative mode.
+     *
+     * @param flight If flight should be allowed.
+     */
+    public void setAllowFlight(boolean flight);
+
 }

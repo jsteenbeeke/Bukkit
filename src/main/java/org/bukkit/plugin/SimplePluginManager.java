@@ -168,7 +168,7 @@ public final class SimplePluginManager implements PluginManager {
 
     /**
      * Loads the plugin in the specified file
-     *
+     * <p />
      * File must be valid according to the current enabled Plugin interfaces
      *
      * @param file File containing the plugin to load
@@ -183,7 +183,7 @@ public final class SimplePluginManager implements PluginManager {
 
     /**
      * Loads the plugin in the specified file
-     *
+     * <p />
      * File must be valid according to the current enabled Plugin interfaces
      *
      * @param file File containing the plugin to load
@@ -226,7 +226,7 @@ public final class SimplePluginManager implements PluginManager {
 
     /**
      * Checks if the given plugin is loaded and returns it when applicable
-     *
+     * <p />
      * Please note that the name of the plugin is case-sensitive
      *
      * @param name Name of the plugin to check
@@ -242,7 +242,7 @@ public final class SimplePluginManager implements PluginManager {
 
     /**
      * Checks if the given plugin is enabled or not
-     *
+     * <p />
      * Please note that the name of the plugin is case-sensitive.
      *
      * @param name Name of the plugin to check
@@ -331,35 +331,35 @@ public final class SimplePluginManager implements PluginManager {
      * @param event Event details
      */
     public synchronized void callEvent(Event event) {
-        SortedSet<RegisteredListener> eventListeners = listeners.get(event.getType());
+        for (RegisteredListener registration : getEventListeners(event.getType())) {
+            if (!registration.getPlugin().isEnabled()) {
+                continue;
+            }
 
-        if (eventListeners != null) {
-            for (RegisteredListener registration : eventListeners) {
-                try {
-                    long start = System.nanoTime();
-                    registration.callEvent(event);
-                    registration.getPlugin().incTiming(event.getType(), System.nanoTime() - start);
-                } catch (AuthorNagException ex) {
-                    Plugin plugin = registration.getPlugin();
+            try {
+                long start = System.nanoTime();
+                registration.callEvent(event);
+                registration.getPlugin().incTiming(event.getType(), System.nanoTime() - start);
+            } catch (AuthorNagException ex) {
+                Plugin plugin = registration.getPlugin();
 
-                    if (plugin.isNaggable()) {
-                        plugin.setNaggable(false);
+                if (plugin.isNaggable()) {
+                    plugin.setNaggable(false);
 
-                        String author = "<NoAuthorGiven>";
+                    String author = "<NoAuthorGiven>";
 
-                        if (plugin.getDescription().getAuthors().size() > 0) {
-                            author = plugin.getDescription().getAuthors().get(0);
-                        }
-                        server.getLogger().log(Level.SEVERE, String.format(
-                            "Nag author: '%s' of '%s' about the following: %s",
-                            author,
-                            plugin.getDescription().getName(),
-                            ex.getMessage()
-                        ));
+                    if (plugin.getDescription().getAuthors().size() > 0) {
+                        author = plugin.getDescription().getAuthors().get(0);
                     }
-                } catch (Throwable ex) {
-                    server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getType() + " to " + registration.getPlugin().getDescription().getName(), ex);
+                    server.getLogger().log(Level.SEVERE, String.format(
+                        "Nag author: '%s' of '%s' about the following: %s",
+                        author,
+                        plugin.getDescription().getName(),
+                        ex.getMessage()
+                    ));
                 }
+            } catch (Throwable ex) {
+                server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getType() + " to " + registration.getPlugin().getDescription().getName(), ex);
             }
         }
     }
@@ -373,6 +373,18 @@ public final class SimplePluginManager implements PluginManager {
      * @param plugin Plugin to register
      */
     public void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin) {
+        if (type == null) {
+            throw new IllegalArgumentException("Type cannot be null");
+        }
+        if (listener == null) {
+            throw new IllegalArgumentException("Listener cannot be null");
+        }
+        if (priority == null) {
+            throw new IllegalArgumentException("Priority cannot be null");
+        }
+        if (plugin == null) {
+            throw new IllegalArgumentException("Plugin cannot be null");
+        }
         if (!plugin.isEnabled()) {
             throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
         }
@@ -390,6 +402,18 @@ public final class SimplePluginManager implements PluginManager {
      * @param plugin Plugin to register
      */
     public void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin) {
+        if (type == null) {
+            throw new IllegalArgumentException("Type cannot be null");
+        }
+        if (listener == null) {
+            throw new IllegalArgumentException("Listener cannot be null");
+        }
+        if (priority == null) {
+            throw new IllegalArgumentException("Priority cannot be null");
+        }
+        if (plugin == null) {
+            throw new IllegalArgumentException("Plugin cannot be null");
+        }
         if (!plugin.isEnabled()) {
             throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
         }

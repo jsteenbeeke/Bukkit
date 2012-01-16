@@ -17,6 +17,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
+import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 
 /**
@@ -41,7 +42,7 @@ public final class Bukkit {
 
     /**
      * Attempts to set the {@link Server} singleton.
-     *
+     * <p />
      * This cannot be done if the Server is already set.
      *
      * @param server Server instance
@@ -285,5 +286,9 @@ public final class Bukkit {
 
     public static File getWorldContainer() {
         return server.getWorldContainer();
+    }
+
+    public static Messenger getMessenger() {
+        return server.getMessenger();
     }
 }

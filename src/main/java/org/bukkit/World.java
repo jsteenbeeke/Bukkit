@@ -12,12 +12,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.bukkit.util.Vector;
 
 /**
  * Represents a world, which may contain entities, chunks and blocks
  */
-public interface World {
+public interface World extends PluginMessageRecipient {
 
     /**
      * Gets the {@link Block} at the given coordinates
@@ -81,7 +82,6 @@ public interface World {
      *
      * @param x X-coordinate of the block
      * @param z Z-coordinate of the block
-     *
      * @return Highest non-empty block
      */
     public Block getHighestBlockAt(int x, int z);
@@ -90,7 +90,6 @@ public interface World {
      * Gets the highest non-empty block at the given coordinates
      *
      * @param location Coordinates to get the highest block
-     *
      * @return Highest non-empty block
      */
     public Block getHighestBlockAt(Location location);
@@ -153,7 +152,7 @@ public interface World {
 
     /**
      * Loads the {@link Chunk} at the specified coordinates
-     *
+     * <p />
      * If the chunk does not exist, it will be generated.
      * This method is analogous to {@link #loadChunk(int, int, boolean)} where generate is true.
      *
@@ -174,7 +173,7 @@ public interface World {
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates
-     *
+     * <p />
      * This method is analogous to {@link #unloadChunk(int, int, boolean, boolean)} where safe and saveis true
      *
      * @param chunk the chunk to unload
@@ -184,7 +183,7 @@ public interface World {
 
     /**
      * Safely unloads and saves the {@link Chunk} at the specified coordinates
-     *
+     * <p />
      * This method is analogous to {@link #unloadChunk(int, int, boolean, boolean)} where safe and saveis true
      *
      * @param x X-coordinate of the chunk
@@ -195,7 +194,7 @@ public interface World {
 
     /**
      * Safely unloads and optionally saves the {@link Chunk} at the specified coordinates
-     *
+     * <p />
      * This method is analogous to {@link #unloadChunk(int, int, boolean, boolean)} where save is true
      *
      * @param x X-coordinate of the chunk
@@ -218,7 +217,7 @@ public interface World {
 
     /**
      * Safely queues the {@link Chunk} at the specified coordinates for unloading
-     *
+     * <p />
      * This method is analogous to {@link #unloadChunkRequest(int, int, boolean)} where safe is true
      *
      * @param x X-coordinate of the chunk
@@ -365,7 +364,7 @@ public interface World {
 
     /**
      * Gets a semi-unique identifier for this world.
-     *
+     * <p />
      * While it is highly unlikely that this may be shared with another World,
      * it is not guaranteed to be unique
      *
@@ -394,7 +393,7 @@ public interface World {
 
     /**
      * Gets the relative in-game time of this world.
-     *
+     * <p />
      * The relative time is analogous to hours * 1000
      *
      * @return The current relative time
@@ -404,7 +403,7 @@ public interface World {
 
     /**
      * Sets the relative in-game time on the server.
-     *
+     * <p />
      * The relative time is analogous to hours * 1000
      * <br /><br />
      * Note that setting the relative time below the current relative time will
@@ -649,43 +648,40 @@ public interface World {
 
     /**
      * Gets the biome for the given block coordinates.
-     *
+     * <p />
      * It is safe to run this method when the block does not exist, it will not create the block.
      *
      * @param x X coordinate of the block
      * @param z Z coordinate of the block
-     *
      * @return Biome of the requested block
      */
     public Biome getBiome(int x, int z);
 
     /**
      * Gets the temperature for the given block coordinates.
-     *
+     * <p />
      * It is safe to run this method when the block does not exist, it will not create the block.
      *
      * @param x X coordinate of the block
      * @param z Z coordinate of the block
-     *
      * @return Temperature of the requested block
      */
     public double getTemperature(int x, int z);
 
     /**
      * Gets the humidity for the given block coordinates.
-     *
+     * <p />
      * It is safe to run this method when the block does not exist, it will not create the block.
      *
      * @param x X coordinate of the block
      * @param z Z coordinate of the block
-     *
      * @return Humidity of the requested block
      */
     public double getHumidity(int x, int z);
 
     /**
      * Gets the maximum height of this world.
-     *
+     * <p />
      * If the max height is 100, there are only blocks from y=0 to y=99.
      *
      * @return Maximum height of the world
@@ -694,7 +690,7 @@ public interface World {
 
     /**
      * Gets the sea level for this world.
-     *
+     * <p />
      * This is often half of {@link #getMaxHeight()}
      *
      * @return Sea level
@@ -749,6 +745,13 @@ public interface World {
      * @return The folder of this world.
      */
     public File getWorldFolder();
+
+    /**
+     * Gets the type of this world.
+     *
+     * @return Type of this world.
+     */
+    public WorldType getWorldType();
 
     /**
      * Represents various map environment types that a world may be
