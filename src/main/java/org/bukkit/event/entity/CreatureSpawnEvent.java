@@ -11,17 +11,15 @@ import org.bukkit.event.HandlerList;
  * <p />
  * If a Creature Spawn event is cancelled, the creature will not spawn.
  */
-@SuppressWarnings("serial")
 public class CreatureSpawnEvent extends EntityEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    private Location location;
+    private final Location location;
     private boolean canceled;
-    private CreatureType creatureType;
-    private SpawnReason spawnReason;
+    private final CreatureType creatureType;
+    private final SpawnReason spawnReason;
 
-    public CreatureSpawnEvent(Entity spawnee, CreatureType mobtype, Location loc, SpawnReason spawnReason) {
-        super(Type.CREATURE_SPAWN, spawnee);
+    public CreatureSpawnEvent(final Entity spawnee, final CreatureType mobtype, final Location loc, final SpawnReason spawnReason) {
+        super(spawnee);
         this.creatureType = mobtype;
         this.location = loc;
         this.spawnReason = spawnReason;
@@ -80,6 +78,14 @@ public class CreatureSpawnEvent extends EntityEvent implements Cancellable {
          * When something spawns from natural means
          */
         NATURAL,
+        /**
+         * When an entity spawns as a jockey of another entity (mostly spider jockeys)
+         */
+        JOCKEY,
+        /**
+         * When a creature spawns due to chunk generation
+         */
+        CHUNK_GEN,
         /**
          * When a creature spawns from a spawner
          */

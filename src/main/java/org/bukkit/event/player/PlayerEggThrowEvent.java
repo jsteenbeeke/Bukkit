@@ -8,16 +8,15 @@ import org.bukkit.event.HandlerList;
 /**
  * Called when a player throws an egg and it might hatch
  */
-@SuppressWarnings("serial")
 public class PlayerEggThrowEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
-    private Egg egg;
+    private final Egg egg;
     private boolean hatching;
     private CreatureType hatchType;
     private byte numHatches;
 
-    public PlayerEggThrowEvent(Player player, Egg egg, boolean hatching, byte numHatches, CreatureType hatchType) {
-        super(Type.PLAYER_EGG_THROW, player);
+    public PlayerEggThrowEvent(final Player player, final Egg egg, final boolean hatching, final byte numHatches, final CreatureType hatchType) {
+        super(player);
         this.egg = egg;
         this.hatching = hatching;
         this.numHatches = numHatches;
