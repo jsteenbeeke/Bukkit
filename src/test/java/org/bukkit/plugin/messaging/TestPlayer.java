@@ -12,7 +12,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -647,5 +649,13 @@ public class TestPlayer implements Player {
 
     public Collection<PotionEffect> getActivePotionEffects() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public EntityType getType() {
+        return EntityType.PLAYER;
     }
 }
