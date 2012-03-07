@@ -1,20 +1,24 @@
-package org.bukkit.plugin.messaging;
+package org.bukkit.plugin;
 
-import com.avaje.ebean.EbeanServer;
 import java.io.File;
 import java.io.InputStream;
+
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.PluginLogger;
 
-public class TestPlugin implements Plugin {
+import com.avaje.ebean.EbeanServer;
+
+public class TestPlugin extends PluginBase {
     private boolean enabled = true;
+
+    final private String pluginName;
+
+    public TestPlugin(String pluginName) {
+        this.pluginName = pluginName;
+    }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -25,7 +29,7 @@ public class TestPlugin implements Plugin {
     }
 
     public PluginDescriptionFile getDescription() {
-        throw new UnsupportedOperationException("Not supported.");
+        return new PluginDescriptionFile(pluginName, "1.0", "test.test");
     }
 
     public FileConfiguration getConfig() {
@@ -99,5 +103,4 @@ public class TestPlugin implements Plugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         throw new UnsupportedOperationException("Not supported.");
     }
-
 }
