@@ -20,7 +20,7 @@ public class PluginsCommand extends BukkitCommand {
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
 
-        sender.sendMessage("Plugins: " + getPluginList());
+        sender.sendMessage("Plugins " + getPluginList());
         return true;
     }
 
@@ -38,6 +38,6 @@ public class PluginsCommand extends BukkitCommand {
             pluginList.append(plugin.getDescription().getName());
         }
 
-        return pluginList.toString();
+        return "(" + plugins.length + "): " + pluginList.toString();
     }
 }

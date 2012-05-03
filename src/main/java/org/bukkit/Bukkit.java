@@ -310,6 +310,10 @@ public final class Bukkit {
         return server.getUpdateFolderFile();
     }
 
+    public static long getConnectionThrottle() {
+        return server.getConnectionThrottle();
+    }
+
     public static int getTicksPerAnimalSpawns() {
         return server.getTicksPerAnimalSpawns();
     }
@@ -348,5 +352,17 @@ public final class Bukkit {
 
     public static HelpMap getHelpMap() {
         return server.getHelpMap();
+    }
+
+    public static int getMonsterSpawnLimit() {
+        return server.getMonsterSpawnLimit();
+    }
+
+    public static int getAnimalSpawnLimit() {
+        return server.getAnimalSpawnLimit();
+    }
+
+    public static int getWaterAnimalSpawnLimit() {
+        return server.getWaterAnimalSpawnLimit();
     }
 }
