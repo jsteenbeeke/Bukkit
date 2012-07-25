@@ -305,12 +305,23 @@ public interface World extends PluginMessageRecipient, Metadatable {
     public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate);
 
     /**
+     * Creates a entity at the given {@link Location}
+     *
+     * @param loc The location to spawn the entity
+     * @param type The entity to spawn
+     * @return Resulting Entity of this method, or null if it was unsuccessful
+     */
+    public Entity spawnEntity(Location loc, EntityType type);
+
+    /**
      * Creates a creature at the given {@link Location}
      *
      * @param loc The location to spawn the creature
      * @param type The creature to spawn
      * @return Resulting LivingEntity of this method, or null if it was unsuccessful
+     * @deprecated Has issues spawning non LivingEntities. Use {@link #spawnEntity(Location, EntityType) spawnEntity} instead.
      */
+    @Deprecated
     public LivingEntity spawnCreature(Location loc, EntityType type);
 
     /**
@@ -430,7 +441,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * Sets the relative in-game time on the server.
      * <p />
      * The relative time is analogous to hours * 1000
-     * <br /><br />
+     * <p />
      * Note that setting the relative time below the current relative time will
      * actually move the clock forward a day. If you require to rewind time, please
      * see setFullTime
@@ -450,7 +461,7 @@ public interface World extends PluginMessageRecipient, Metadatable {
 
     /**
      * Sets the in-game time on the server
-     * <br /><br />
+     * <p />
      * Note that this sets the full time of the world, which may cause adverse
      * effects such as breaking redstone clocks and any scheduled events
      *
