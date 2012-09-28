@@ -153,6 +153,15 @@ public interface World extends PluginMessageRecipient, Metadatable {
     public boolean isChunkLoaded(int x, int z);
 
     /**
+     * Checks if the {@link Chunk} at the specified coordinates is loaded and in use by one or more players
+     *
+     * @param x X-coordinate of the chunk
+     * @param z Z-coordinate of the chunk
+     * @return true if the chunk is loaded and in use by one or more players, otherwise false
+     */
+    public boolean isChunkInUse(int x, int z);
+
+    /**
      * Loads the {@link Chunk} at the specified coordinates
      * <p />
      * If the chunk does not exist, it will be generated.
@@ -630,6 +639,32 @@ public interface World extends PluginMessageRecipient, Metadatable {
     public <T extends Entity> T spawn(Location location, Class<T> clazz) throws IllegalArgumentException;
 
     /**
+     * Spawn a {@link FallingBlock} entity at the given {@link Location} of the specified {@link Material}.
+     * The material dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+     * <p />
+     * The Material must be a block type, check with {@link Material#isBlock() material.isBlock()}.
+     * The Material may not be air.
+     *
+     * @param location The {@link Location} to spawn the FallingBlock
+     * @param material The block {@link Material} type
+     * @param data The block data
+     * @return The spawned {@link FallingBlock} instance
+     * @throws IllegalArgumentException if {@link Location} or {@link Material} are null or {@link Material} is not a block
+     */
+    public FallingBlock spawnFallingBlock(Location location, Material material, byte data) throws IllegalArgumentException;
+
+    /**
+     * Spawn a {@link FallingBlock} entity at the given {@link Location} of the specified blockId (converted to {@link Material})
+     *
+     * @param location The {@link Location} to spawn the FallingBlock
+     * @param blockId see {@see #spawnFallingBlock(org.bukkit.Location, org.bukkit.Material, byte)} material
+     * @param blockData The block data
+     * @return The spawned FallingBlock instance
+     * @throws IllegalArgumentException see {@see #spawnFallingBlock(org.bukkit.Location, org.bukkit.Material, byte)}
+     */
+    public FallingBlock spawnFallingBlock(Location location, int blockId, byte blockData) throws IllegalArgumentException;
+
+    /**
      * Plays an effect to all players within a default radius around a given location.
      *
      * @param location the {@link Location} around which players must be to hear the sound
@@ -947,6 +982,18 @@ public interface World extends PluginMessageRecipient, Metadatable {
      * If set to a negative number the world will use the server-wide spawn limit instead.
      */
     void setWaterAnimalSpawnLimit(int limit);
+
+    /**
+     * Play a Sound at the provided Location in the World
+     * <p />
+     * This function will fail silently if Location or Sound are null.
+     *
+     * @param location The location to play the sound
+     * @param sound The sound to play
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     */
+    void playSound(Location loc, Sound sound, float volume, float pitch);
 
     /**
      * Represents various map environment types that a world may be
